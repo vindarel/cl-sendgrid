@@ -26,7 +26,7 @@ TODO:
 
 # See also
 
-* https://github.com/40ants/mailgun
+* https://github.com/40ants/mailgun (Mailgun: just a bit more overhead to getting started, a free plan a bit less free)
 * https://github.com/CodyReichert/awesome-cl#email
 
 # Licence
