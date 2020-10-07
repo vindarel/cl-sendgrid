@@ -15,16 +15,25 @@ Create an account an set these variables:
 Send an email with `send-email`:
 
 ```lisp
-sendgrid:send-email &key to (from (getf *email-config* :|from|)) subject content (verbose *verbose*)
+(sendgrid:send-email &key to
+                          (from (getf *email-config* :|from|))
+                          subject
+                          content
+                          (verbose *verbose*))
+
+;; #()
+;; 202
+;; #<HASH-TABLE :TEST EQUAL :COUNT 10 {10079655A3}>
+;; #<QURI.URI.HTTP:URI-HTTPS https://api.sendgrid.com/v3/mail/send>
+;; #<CL+SSL::SSL-STREAM for #<FD-STREAM for "socket 192.168.1.11:36670, peer: 159.122.xxx.yyy:443" {1007880183}>>
 ```
 
 It takes the time of a POST request.
 
 TODO:
 
-- [X] use the code
-- [ ] actually use the .asd
 - [ ] make the "to" parameter accept a list of addresses.
+- [ ] add "reply_to"
 
 # See also
 

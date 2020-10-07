@@ -1,5 +1,8 @@
 (defpackage sendgrid
-  (:use :cl))
+  (:use :cl)
+  (:export
+   :send-email
+   :*email-config*))
 
 (in-package :sendgrid)
 
