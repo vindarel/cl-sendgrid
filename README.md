@@ -2,7 +2,11 @@
 
 https://sendgrid.com/
 
-On [Ultralisp](https://ultralisp.org/).
+On Quicklisp (2020-10):
+
+    (ql:quickload "sendgrid")
+
+and on [Ultralisp](https://ultralisp.org/).
 
 Create an account an set these variables:
 
