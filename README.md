@@ -36,8 +36,8 @@ It takes the time of a POST request.
 
 TODO:
 
-- [ ] make the "to" parameter accept a list of addresses.
-- [ ] add "reply_to"
+- [X] make the "to" parameter accept a list of addresses.
+- [X] add "reply_to"
 
 # See also
 

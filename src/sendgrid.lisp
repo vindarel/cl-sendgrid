@@ -28,11 +28,16 @@ The JSON looks like:
     "from": {
         "email": "test@example.com"
     },
+    "reply_to": {
+        "email": "sam.smith@example.com",
+        "name": "Sam Smith"
+    },
     "personalizations": [
         {
             "to": [
                 {
-                    "email": "test@example.com"
+                    "email": "test@example.com",
+                    "name": "John Doe"
                 }
             ]
         }
@@ -40,19 +45,35 @@ The JSON looks like:
     "subject": "Sending with SendGrid is Fun"
 }
 |#
-(defun sendgrid-json (&key to from subject content)
-  (let ((json-alist `(("personalizations"
-                       (("to" (("email" . ,to)))))
-                      ("from" ("email" . ,from))
-                      ("subject" . ,subject)
-                      ("content" (("type" . "text/plain")
-                                  ("value" . ,content))))))
+(defun sendgrid-json (&key to from reply-to subject content)
+  "Build the data json.
+  `to': one email address or a list.
+  `reply-to': a pair of email and name."
+  (unless (or nil (consp reply-to))
+    (error "\"reply-to\" must be a pair with an email and a name (strings)."))
+  (setf to (alexandria:ensure-list to))
+  (let ((json-alist
+         `(("personalizations"
+            ,(loop for dest in to
+                collect `("to" (("email" . ,dest)))))
+           ("from" ("email" . ,from))
+           ("reply_to" ("email" . ,(car reply-to))
+                       ("name" . ,(cadr reply-to)))
+           ("subject" . ,subject)
+           ("content" (("type" . "text/plain")
+                       ("value" . ,content))))))
     (jonathan:to-json json-alist :from :alist)))
 
 ;; test:
 #+nil
-(assert (string-equal (sendgrid-json :to "to@mail" :from "me@mail" :subject "hello" :content "yo")
-                      "{\"personalizations\":[{\"to\":[{\"email\":\"to@mail\"}]}],\"from\":{\"email\":\"me@mail\"},\"subject\":\"hello\",\"content\":[{\"type\":\"text/plain\",\"value\":\"yo\"}]}"))
+(progn
+  ;; Base case:
+  (assert (string-equal (sendgrid-json :to "to@mail" :from "me@mail" :subject "hello" :content "yo" :reply-to '("@" "me"))
+                        "{\"personalizations\":[{\"to\":[{\"email\":\"to@mail\"}]}],\"from\":{\"email\":\"me@mail\"},\"reply_to\":{\"email\":\"@\",\"name\":\"me\"},\"subject\":\"hello\",\"content\":[{\"type\":\"text/plain\",\"value\":\"yo\"}]}"))
+
+  ;; With two receivers:
+  (assert (string-equal (sendgrid-json :to '("to@mail" "to-two@mail") :from "me@mail" :subject "hello" :content "yo" :reply-to '("@" "me"))
+                        "{\"personalizations\":[{\"to\":[{\"email\":\"to@mail\"}],\"to\":[{\"email\":\"to-two@mail\"}]}],\"from\":{\"email\":\"me@mail\"},\"reply_to\":{\"email\":\"@\",\"name\":\"me\"},\"subject\":\"hello\",\"content\":[{\"type\":\"text/plain\",\"value\":\"yo\"}]}"))))
 
 
 (defun send-email (&key to (from (getf *email-config* :|from|)) subject content (verbose *verbose*))
