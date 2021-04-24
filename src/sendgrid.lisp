@@ -45,13 +45,21 @@ The JSON looks like:
     "subject": "Sending with SendGrid is Fun"
 }
 |#
+
+(defun ensure-list (list)
+  "If LIST is a list, it is returned. Otherwise returns the list designated by LIST.
+   (from Alexandria)"
+  (if (listp list)
+      list
+      (list list)))
+
 (defun sendgrid-json (&key to from reply-to subject content)
   "Build the data json.
   `to': one email address or a list.
   `reply-to': a pair of email and name."
   (unless (or nil (consp reply-to))
     (error "\"reply-to\" must be a pair with an email and a name (strings)."))
-  (setf to (alexandria:ensure-list to))
+  (setf to (ensure-list to))
   (let ((json-alist
          `(("personalizations"
             ,(loop for dest in to
