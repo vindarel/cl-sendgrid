@@ -84,16 +84,27 @@ The JSON looks like:
                         "{\"personalizations\":[{\"to\":[{\"email\":\"to@mail\"}],\"to\":[{\"email\":\"to-two@mail\"}]}],\"from\":{\"email\":\"me@mail\"},\"reply_to\":{\"email\":\"@\",\"name\":\"me\"},\"subject\":\"hello\",\"content\":[{\"type\":\"text/plain\",\"value\":\"yo\"}]}")))
 
 
-(defun send-email (&key to (from (getf *email-config* :|from|)) subject content (verbose *verbose*))
+(defun send-email (&key to (from (getf *email-config* :|from|))
+                     (reply-to (getf *email-config* :|reply-to|))
+                     subject
+                     content
+                     (api-key (getf *email-config* :|api-key|))
+                     (verbose *verbose*))
   "Send an email with SendGrid's API.
-  `from': from the `*email-config*' by default.
+
+  -`from': from the `*email-config*' by default.
+  - `reply-to': must be a list with an email address and a name.
+
   todo: make `to' accept multiple addresses."
   (assert (and to from subject content))
   (dex:post *sendgrid-api*
             :headers `(("Authorization" . ,(concatenate
                                             'string
                                             "Bearer "
-                                            (getf *email-config* :|api-key|)))
+                                            api-key))
                        ("content-Type" . "application/json"))
             :verbose verbose
-            :content (sendgrid-json :to to :from from :subject subject :content content)))
+            :content (sendgrid-json :to to :from from
+                                    :reply-to reply-to
+                                    :subject subject
+                                    :content content)))

@@ -21,6 +21,7 @@ Send an email with `send-email`:
 ```lisp
 (sendgrid:send-email &key to
                           (from (getf *email-config* :|from|))
+                          (reply-to (getf *email-config* :|reply-to|))
                           subject
                           content
                           (verbose *verbose*))
@@ -37,7 +38,7 @@ It takes the time of a POST request.
 TODO:
 
 - [X] make the "to" parameter accept a list of addresses.
-- [X] add "reply_to"
+- [X] add "reply_to". It is a cons cell / a list with: an email address, a name.
 
 # See also
 
