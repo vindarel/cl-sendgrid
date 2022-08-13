@@ -53,7 +53,7 @@ The JSON looks like:
       list
       (list list)))
 
-(defun sendgrid-json (&key to from reply-to subject content)
+(defun sendgrid-json (&key to from reply-to subject content-type content-value)
   "Build the data json.
   `to': one email address or a list.
   `reply-to': a pair of email and name."
@@ -68,25 +68,28 @@ The JSON looks like:
            ("reply_to" ("email" . ,(car reply-to))
                        ("name" . ,(cadr reply-to)))
            ("subject" . ,subject)
-           ("content" (("type" . "text/plain")
-                       ("value" . ,content))))))
+           ("content" (("type" . ,content-type)
+                       ("value" . ,content-value))))))
     (jonathan:to-json json-alist :from :alist)))
 
 ;; test:
 #+nil
 (progn
   ;; Base case:
-  (assert (string-equal (sendgrid-json :to "to@mail" :from "me@mail" :subject "hello" :content "yo" :reply-to '("@" "me"))
+  (assert (string-equal (sendgrid-json :to "to@mail" :from "me@mail" :subject "hello" :content-value "yo" :reply-to '("@" "me"))
                         "{\"personalizations\":[{\"to\":[{\"email\":\"to@mail\"}]}],\"from\":{\"email\":\"me@mail\"},\"reply_to\":{\"email\":\"@\",\"name\":\"me\"},\"subject\":\"hello\",\"content\":[{\"type\":\"text/plain\",\"value\":\"yo\"}]}"))
 
   ;; With two receivers:
-  (assert (string-equal (sendgrid-json :to '("to@mail" "to-two@mail") :from "me@mail" :subject "hello" :content "yo" :reply-to '("@" "me"))
+  (assert (string-equal (sendgrid-json :to '("to@mail" "to-two@mail") :from "me@mail" :subject "hello" :content-value "yo" :reply-to '("@" "me"))
                         "{\"personalizations\":[{\"to\":[{\"email\":\"to@mail\"}],\"to\":[{\"email\":\"to-two@mail\"}]}],\"from\":{\"email\":\"me@mail\"},\"reply_to\":{\"email\":\"@\",\"name\":\"me\"},\"subject\":\"hello\",\"content\":[{\"type\":\"text/plain\",\"value\":\"yo\"}]}")))
 
 
-(defun send-email (&key to (from (getf *email-config* :|from|))
+(defun send-email (&key
+                     to
+                     (from (getf *email-config* :|from|))
                      (reply-to (getf *email-config* :|reply-to|))
                      subject
+                     (content-type "text/plain")
                      content
                      (api-key (getf *email-config* :|api-key|))
                      (verbose *verbose*))
@@ -104,7 +107,9 @@ The JSON looks like:
                                             api-key))
                        ("content-Type" . "application/json"))
             :verbose verbose
-            :content (sendgrid-json :to to :from from
+            :content (sendgrid-json :to to
+                                    :from from
                                     :reply-to reply-to
                                     :subject subject
-                                    :content content)))
+                                    :content-value content
+                                    :content-type content-type)))
