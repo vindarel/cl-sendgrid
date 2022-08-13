@@ -8,13 +8,13 @@
 
 ;;; Send an email with SendGrid's API.
 
-(defparameter *email-config*
+(defvar *email-config*
   '(:|api-key| ""
     :|from| ""))
 
 (defparameter *sendgrid-api* "https://api.sendgrid.com/v3/mail/send")
 
-(defparameter *verbose* nil)
+(defvar *verbose* nil)
 
 #|
 The JSON looks like:
