@@ -89,12 +89,12 @@ The JSON looks like:
                      subject
                      (content-type "text/plain")
                      content
-                     (verbose *verbose*))
   "Send an email with SendGrid's API.
 
   -`from': from the `*email-config*' by default.
   - `reply-to': must be a list with an email address and a name.
                      (api-key (uiop:getenv *api-key-environment-variable-name*))
+                   &allow-other-keys) ; &allow-other-keys can help gradual API updates.
 
   todo: make `to' accept multiple addresses."
   (assert (and to from subject content))
@@ -104,10 +104,10 @@ The JSON looks like:
                                             "Bearer "
                                             api-key))
                        ("content-Type" . "application/json"))
-            :verbose verbose
             :content (sendgrid-json :to to
                                     :from from
                                     :reply-to reply-to
                                     :subject subject
                                     :content-value content
                                     :content-type content-type)))
+            :verbose *verbose*
