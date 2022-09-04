@@ -1,9 +1,8 @@
 (defpackage sendgrid
   (:use :cl)
-  (:export
-   :send-email
-   :*email-config*))
-
+  (:export #:send-email
+           #:*api-key-environment-variable-name*
+           #:*verbose*))
 (in-package :sendgrid)
 
 ;;; Send an email with SendGrid's API.
