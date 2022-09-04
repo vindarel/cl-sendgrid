@@ -7,9 +7,8 @@
 
 ;;; Send an email with SendGrid's API.
 
-(defvar *email-config*
-  '(:|api-key| ""
-    :|from| ""))
+(defparameter *api-key-environment-variable-name*
+  "SENDGRID_API_KEY")
 
 (defparameter *sendgrid-api* "https://api.sendgrid.com/v3/mail/send")
 
@@ -90,12 +89,12 @@ The JSON looks like:
                      subject
                      (content-type "text/plain")
                      content
-                     (api-key (getf *email-config* :|api-key|))
                      (verbose *verbose*))
   "Send an email with SendGrid's API.
 
   -`from': from the `*email-config*' by default.
   - `reply-to': must be a list with an email address and a name.
+                     (api-key (uiop:getenv *api-key-environment-variable-name*))
 
   todo: make `to' accept multiple addresses."
   (assert (and to from subject content))
