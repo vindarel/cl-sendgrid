@@ -74,7 +74,7 @@ CL-USER> (setf (uiop:getenv sendgrid:*api-key-environment-variable-name*) your-a
                      :subject "Sending emails from SendGrid is fun!"
                      :content "Sending emails from SendGrid is fun!")
 ```
-## Sample html email
+## Sample HTML email
 ```lisp
 (sendgrid:send-email :to "recipient@example.com"
                      :from "noreply@example.com"
@@ -82,11 +82,20 @@ CL-USER> (setf (uiop:getenv sendgrid:*api-key-environment-variable-name*) your-a
                      :content-type "text/html"
                      :content "<h1>A title</h1><br/><strong>Sending emails from SendGrid is fun!</strong>")
 ```
+## Verbose mode example
+```
+(let ((sendgrid:*verbose* t))
+  (sendgrid:send-email :to "recipient@example.com"
+                       :from "noreply@example.com"
+                       :subject "Sending emails from SendGrid is fun!"
+                       :content-type "text/html"
+                       :content "<h1>A title</h1><br/><strong>Sending emails from SendGrid is fun!</strong>"))
+```
 # See also
 
 * https://github.com/40ants/mailgun (Mailgun: just a bit more overhead to getting started, a free plan a bit less free)
 * https://github.com/CodyReichert/awesome-cl#email
-
+* [spinneret](https://github.com/ruricolist/spinneret) (recommended) or [cl-who](https://edicl.github.io/cl-who/) for generating HTML strings.
 # Licence
 
 MIT.
