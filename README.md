@@ -68,9 +68,18 @@ CL-USER> (setf (uiop:getenv sendgrid:*api-key-environment-variable-name*) your-a
                    &allow-other-keys)
 ```
 ## Sample plain text email
+### Minimum
 ```lisp
 (sendgrid:send-email :to "recipient@example.com"
                      :from "noreply@example.com"
+                     :subject "Sending emails from SendGrid is fun!"
+                     :content "Sending emails from SendGrid is fun!")
+```
+### With ```reply-to```
+```lisp
+(sendgrid:send-email :to "recipient@example.com"
+                     :from "team@example.com"
+                     :reply-to '(("email" . "noreply@example.com") ("name" . "No Reply"))
                      :subject "Sending emails from SendGrid is fun!"
                      :content "Sending emails from SendGrid is fun!")
 ```
