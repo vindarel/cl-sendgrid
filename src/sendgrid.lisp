@@ -7,10 +7,10 @@
 
 ;;; Send an email with SendGrid's API.
 
-(defparameter *api-key-environment-variable-name*
-  "SENDGRID_API_KEY")
-
 (defparameter *sendgrid-api* "https://api.sendgrid.com/v3/mail/send")
+
+(defvar *api-key-environment-variable-name*
+  "SENDGRID_API_KEY")
 
 (defvar *verbose* nil)
 
