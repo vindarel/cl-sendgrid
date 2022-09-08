@@ -53,8 +53,8 @@ Or set it using UIOP
 ```lisp
 CL-USER> (setf (uiop:getenv sendgrid:*api-key-environment-variable-name*) your-api-key-value)
 ```
-### Provide the API key when calling ```sendgrid:send-mail```
-```api-key``` is one of the parameter of ```sendgrid:send-mail```
+### Provide the API key when calling `sendgrid:send-mail`
+`api-key` is one of the parameter of `sendgrid:send-mail`
 ```lisp
 (sendgrid:send-email &rest rest
                      &key
@@ -75,7 +75,7 @@ CL-USER> (setf (uiop:getenv sendgrid:*api-key-environment-variable-name*) your-a
                      :subject "Sending emails from SendGrid is fun!"
                      :content "Sending emails from SendGrid is fun!")
 ```
-### With ```reply-to```
+### With `reply-to`
 ```lisp
 (sendgrid:send-email :to "recipient@example.com"
                      :from "team@example.com"
