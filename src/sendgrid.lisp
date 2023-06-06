@@ -24,7 +24,8 @@ The JSON looks like:
         }
     ],
     "from": {
-        "email": "test@example.com"
+        "email": "test@example.com",
+        "name": "Test Name"
     },
     "reply_to": {
         "email": "sam.smith@example.com",
@@ -53,7 +54,8 @@ The JSON looks like:
 
 (defun sendgrid-json (&key
                         to
-                        from
+                        from-email
+			from-name
                         reply-to
                         subject
                         (content-type "text/plain") ; this duplication is a-must. &rest doesn't pass the default value of caller's keys.
@@ -63,7 +65,7 @@ The JSON looks like:
   `to': one email address or a list.
   `reply-to': a pair of email and name."
   (assert (and to
-               from
+               from-email
                subject
                content-value))
   (unless (or (null reply-to)
@@ -78,8 +80,9 @@ The JSON looks like:
          (json-alist
            (append `(("personalizations"
                       ,(loop for dest in to
-                             collect `("to" (("email" . ,dest)))))
-                     ("from" ("email" . ,from)))
+                             collect `("to" (("email" . ,dest))))))
+		   `(("from" ("email" . ,from-email)
+			     ("name" . ,from-name)))
                    (when reply-to
                      `(,(cons "reply_to" reply-to)))
                    `(("subject" . ,subject)
@@ -101,7 +104,8 @@ The JSON looks like:
 (defun send-email (&rest rest
                    &key
                      to
-                     from
+                     from-email
+		     from-name
                      subject
                      content
                      reply-to
@@ -121,3 +125,4 @@ The JSON looks like:
             :content (apply #'sendgrid-json
                             (append `(:content-value ,content)
                                     rest)))) ; The compiler might warn variables defined but never used. But keeping the warnings should be better for future code modification. E.g., suppressing the warnings by (declare (ignorable ...) could result in debugging difficulties once the API changes.
+

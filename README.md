@@ -15,15 +15,16 @@ Create a SendGrid account and set these variables:
 ```lisp
 (setf *email-config*
   '(:|api-key| "your private api key"
-    :|from| "the default 'from' address."))
+    :|from-email| "the default 'from' email address."
+    :|from-name| "the default 'from' name. "))
 ```
 
 Send an email with `send-email`:
 
 ```lisp
 (sendgrid:send-email &key to
-                          (from (getf *email-config* :|from|))
-                          (reply-to (getf *email-config* :|reply-to|))
+                          from-email
+			  from-name
                           subject
                           content
                           (verbose *verbose*))
@@ -36,6 +37,8 @@ Send an email with `send-email`:
 ```
 
 It takes the time of a POST request.
+
+`from-email`, `from-name`, `subject` and `content` are mandatory sending keys.
 
 # Updated usage
 ## API KEY
