@@ -100,6 +100,21 @@ CL-USER> (setf (uiop:getenv sendgrid:*api-key-environment-variable-name*) your-a
                        :content-type "text/html"
                        :content "<h1>A title</h1><br/><strong>Sending emails from SendGrid is fun!</strong>"))
 ```
+
+## Optional - Add sender name
+
+Without a from name, your sending email will be the name of the email. Use the optional `:from-name` key to add a more appropriate sender name.
+
+```lisp
+(sendgrid:send-email :to "recipient@example.com"
+                     :from "noreply@example.com"
+					 :from-name "Jane Doe"
+                     :subject "Sending emails from SendGrid is fun!"
+                     :content-type "text/html"
+                     :content "<h1>A title</h1><br/><strong>Sending emails from SendGrid is fun!</strong>")
+```
+
+
 # See also
 
 * https://github.com/40ants/mailgun (Mailgun: just a bit more overhead to getting started, a free plan a bit less free)
