@@ -25,6 +25,7 @@ The JSON looks like:
     ],
     "from": {
         "email": "test@example.com"
+        "name": "Test Name"
     },
     "reply_to": {
         "email": "sam.smith@example.com",
@@ -54,6 +55,7 @@ The JSON looks like:
 (defun sendgrid-json (&key
                         to
                         from
+			from-name
                         reply-to
                         subject
                         (content-type "text/plain") ; this duplication is a-must. &rest doesn't pass the default value of caller's keys.
@@ -61,7 +63,9 @@ The JSON looks like:
                       &allow-other-keys)
   "Build the data json.
   `to': one email address or a list.
-  `reply-to': a pair of email and name."
+  `reply-to': a pair of email and name.
+  `from': the sending email
+  `from-name': the sending name that shows up in the inbox"
   (assert (and to
                from
                subject
@@ -79,7 +83,10 @@ The JSON looks like:
            (append `(("personalizations"
                       ,(loop for dest in to
                              collect `("to" (("email" . ,dest)))))
-                     ("from" ("email" . ,from)))
+		     ,(if (null from-name)
+			 `("from" ("email" . ,from))
+			 `("from" ("email" . ,from)
+				  ("name" . ,from-name))))
                    (when reply-to
                      `(,(cons "reply_to" reply-to)))
                    `(("subject" . ,subject)
