@@ -20,8 +20,15 @@
   "Unix time now"
   (local-time:timestamp-to-unix (local-time:now)))
 
-(defun now-plus-unix-time(days)
-  (+ (now) (* days *one-day-in-seconds*)))
+(defun now-plus-n-days(days)
+  "Sendgrid api allows you to send emails up to 4 days in the future
+
+Specify  n days in the future where n is either 1, 2, 3 or 4 days.
+
+A unix time for that date will be returned. If any other number of days is provided, the now function will return."
+  (if (and (> days 0) (< days 5))
+      (+ (now) (* days *one-day-in-seconds*))
+      (now)))
 
 #|
 The JSON looks like:
@@ -67,6 +74,7 @@ The JSON looks like:
 			from-name
                         reply-to
                         subject
+			send-at
                         (content-type "text/plain") ; this duplication is a-must. &rest doesn't pass the default value of caller's keys.
                         content-value
                       &allow-other-keys)
@@ -99,6 +107,7 @@ The JSON looks like:
                    (when reply-to
                      `(,(cons "reply_to" reply-to)))
                    `(("subject" . ,subject)
+		     ("send_at" . ,send-at)
                      ("content" (("type" . ,content-type)
                                  ("value" . ,content-value)))))))
     (jonathan:to-json json-alist :from :alist)))
