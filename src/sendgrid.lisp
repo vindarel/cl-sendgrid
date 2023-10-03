@@ -14,6 +14,15 @@
 
 (defvar *verbose* nil)
 
+(defparameter *one-day-in-seconds* 85400 "one day less 1000 seconds")
+
+(defun now()
+  "Unix time now"
+  (local-time:timestamp-to-unix (local-time:now)))
+
+(defun now-plus-unix-time(days)
+  (+ (now) (* days *one-day-in-seconds*)))
+
 #|
 The JSON looks like:
 {
