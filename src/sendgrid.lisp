@@ -2,7 +2,8 @@
   (:use :cl)
   (:export #:send-email
            #:*api-key-environment-variable-name*
-           #:*verbose*))
+           #:*verbose*
+	   #:now-plus-n-days))
 (in-package :sendgrid)
 
 ;;; Send an email with SendGrid's API.
