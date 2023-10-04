@@ -2,7 +2,8 @@
   (:use :cl)
   (:export #:send-email
            #:*api-key-environment-variable-name*
-           #:*verbose*))
+           #:*verbose*
+	   #:now-plus-n-days))
 (in-package :sendgrid)
 
 ;;; Send an email with SendGrid's API.
@@ -13,6 +14,22 @@
   "SENDGRID_API_KEY")
 
 (defvar *verbose* nil)
+
+(defparameter *one-day-in-seconds* 85400 "one day less 1000 seconds")
+
+(defun now()
+  "Unix time now"
+  (local-time:timestamp-to-unix (local-time:now)))
+
+(defun now-plus-n-days(days)
+  "Sendgrid api allows you to send emails up to 3 days (72 hours) in the future
+
+Specify  n days in the future where n is either 1, 2, or 3 days.
+
+A unix time for that date will be returned. If any other number of days is provided, the now function will return."
+  (if (< 0 days 4)
+      (+ (now) (* days *one-day-in-seconds*))
+      (warn "Please pass in 1-3 days. Sendgrid only allows future sending of emails between 1-3 days.")))
 
 #|
 The JSON looks like:
@@ -58,6 +75,7 @@ The JSON looks like:
 			from-name
                         reply-to
                         subject
+			send-at
                         (content-type "text/plain") ; this duplication is a-must. &rest doesn't pass the default value of caller's keys.
                         content-value
                       &allow-other-keys)
@@ -90,6 +108,7 @@ The JSON looks like:
                    (when reply-to
                      `(,(cons "reply_to" reply-to)))
                    `(("subject" . ,subject)
+		     ("send_at" . ,send-at)
                      ("content" (("type" . ,content-type)
                                  ("value" . ,content-value)))))))
     (jonathan:to-json json-alist :from :alist)))
