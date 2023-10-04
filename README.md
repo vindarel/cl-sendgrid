@@ -107,11 +107,11 @@ Without a from name, your sending email will be the name of the email. Use the o
 
 ```lisp
 (sendgrid:send-email :to "recipient@example.com"
-                     :from "noreply@example.com"
-					 :from-name "Jane Doe"
-                     :subject "Sending emails from SendGrid is fun!"
-                     :content-type "text/html"
-                     :content "<h1>A title</h1><br/><strong>Sending emails from SendGrid is fun!</strong>")
+	              :from "noreply@example.com"
+		      :from-name "Jane Doe"
+		      :subject "Sending emails from SendGrid is fun!"
+		      :content-type "text/html"
+		      :content "<h1>A title</h1><br/><strong>Sending emails from SendGrid is fun!</strong>")
 ```
 ## Email scheduling - :send-at key
 
@@ -128,14 +128,14 @@ To send an email now, you can omit the `:send-at` key (see examples above).
 Use the function `(now-plus-n-days n)` where `n` can be 1, 2, 3 or 4 days in the future. This function will return the epoch time for that future date.
 
 ```lisp
-(sendgrid:send-email 
-	:to "recipient@example.com"
-	:from "noreply@example.com"
-	:from-name "Jane Doe"
-	:send-at (now-plus-n-days 2)
-	:subject "Sending emails from SendGrid is fun!"
-	:content-type "text/html"
-	:content "<h1>A title</h1><br/><strong>Sending emails from SendGrid is fun!</strong>")
+(sendgrid:send-email :to "recipient@example.com"
+	              :from "noreply@example.com"
+		      :from-name "Jane Doe"
+		      ;; send email 2 days in the future
+		      :send-at (now-plus-n-days 2)
+		      :subject "Sending emails from SendGrid is fun!"
+		      :content-type "text/html"
+		      :content "<h1>A title</h1><br/><strong>Sending emails from SendGrid is fun!</strong>")
 ```
 
 # See also
