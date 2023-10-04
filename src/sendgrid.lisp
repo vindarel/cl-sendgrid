@@ -22,14 +22,14 @@
   (local-time:timestamp-to-unix (local-time:now)))
 
 (defun now-plus-n-days(days)
-  "Sendgrid api allows you to send emails up to 4 days in the future
+  "Sendgrid api allows you to send emails up to 3 days (72 hours) in the future
 
-Specify  n days in the future where n is either 1, 2, 3 or 4 days.
+Specify  n days in the future where n is either 1, 2, or 3 days.
 
 A unix time for that date will be returned. If any other number of days is provided, the now function will return."
-  (if (and (> days 0) (< days 5))
+  (if (< 0 days 4)
       (+ (now) (* days *one-day-in-seconds*))
-      (warn "Please pass in 1-4 days. Sendgrid only allows future sending of emails between 1-4 days.")))
+      (warn "Please pass in 1-3 days. Sendgrid only allows future sending of emails between 1-3 days.")))
 
 #|
 The JSON looks like:
