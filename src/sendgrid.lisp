@@ -29,7 +29,7 @@ Specify  n days in the future where n is either 1, 2, 3 or 4 days.
 A unix time for that date will be returned. If any other number of days is provided, the now function will return."
   (if (and (> days 0) (< days 5))
       (+ (now) (* days *one-day-in-seconds*))
-      (now)))
+      (warn "Please pass in 1-4 days. Sendgrid only allows future sending of emails between 1-4 days.")))
 
 #|
 The JSON looks like:
