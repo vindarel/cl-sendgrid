@@ -117,7 +117,7 @@ Without a from name, your sending email will be the name of the email. Use the o
 
 The :send-at key takes a unix epoch time and sends your email at that specific time.
  
-Free sendgrid accounts (at this time - 4th Oct 23) are limited to sending up to 4 days in the future. Therefore the `:send-at` key is limited to sending emails between 1-4 days in the future.
+Free sendgrid accounts (at this time - 4th Oct 23) are limited to sending up to 3 days in the future. Therefore the `:send-at` key is limited to sending emails between 1-3 days in the future.
 
 ### Send email now
 
@@ -125,7 +125,7 @@ To send an email now, you can omit the `:send-at` key (see examples above).
 
 ### Send email in the future
 
-Use the function `(now-plus-n-days n)` where `n` can be 1, 2, 3 or 4 days in the future. This function will return the epoch time for that future date.
+Use the function `(now-plus-n-days n)` where `n` can be 1, 2, or 3 days in the future. This function will return the epoch time for that future date.
 
 ```lisp
 (sendgrid:send-email :to "recipient@example.com"
