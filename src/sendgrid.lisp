@@ -76,6 +76,9 @@ The JSON looks like:
                         reply-to
                         subject
 			send-at
+		        (attachments nil)
+			file
+			filename
                         (content-type "text/plain") ; this duplication is a-must. &rest doesn't pass the default value of caller's keys.
                         content-value
                       &allow-other-keys)
@@ -84,10 +87,17 @@ The JSON looks like:
   `reply-to': a pair of email and name.
   `from': the sending email
   `from-name': the sending name that shows up in the inbox"
-  (assert (and to
-               from
-               subject
-               content-value))
+  (if attachments
+      (assert (and to
+		   from
+		   subject
+		   content-value
+		   file
+		   filename))
+      (assert (and to
+		   from
+		   subject
+		   content-value)))
   (unless (or (null reply-to)
               (and (stringp (cdr (assoc "email"
                                         reply-to
@@ -107,6 +117,12 @@ The JSON looks like:
 				  ("name" . ,from-name))))
                    (when reply-to
                      `(,(cons "reply_to" reply-to)))
+
+		   (when attachments
+		     `(("attachments" (("content" . ,(create-attachment-base64 file))
+				       ("type" . "text/html")
+				       ("filename" . ,filename)
+				       ("disposition" . "attachment")))))
                    `(("subject" . ,subject)
 		     ("send_at" . ,send-at)
                      ("content" (("type" . ,content-type)
@@ -124,6 +140,27 @@ The JSON looks like:
   (assert (string-equal (sendgrid-json :to '("to@mail" "to-two@mail") :from "me@mail" :subject "hello" :content-value "yo" :reply-to '(("email" . "@") ("name" . "me")))
                         "{\"personalizations\":[{\"to\":[{\"email\":\"to@mail\"}],\"to\":[{\"email\":\"to-two@mail\"}]}],\"from\":{\"email\":\"me@mail\"},\"reply_to\":{\"email\":\"@\",\"name\":\"me\"},\"subject\":\"hello\",\"content\":[{\"type\":\"text/plain\",\"value\":\"yo\"}]}")))
 
+
+;; Logic For Sending Attachments
+
+(defun file-to-seq (file)
+  "convert a file into a sequence of bytes"
+  (flexi-streams:string-to-octets
+   (uiop:read-file-string file)))
+
+(defun seq-to-base64 (seqs)
+  "convert a sequence of bytes into a base64 string"
+  (qbase64:encode-bytes seqs))
+
+(defun create-attachment-base64 (file)
+  "A function that converts a file into a base64 string. Base64 is the required format for sending attachments in emails."
+  (let* ((seqs (file-to-seq file))
+	 (base (seq-to-base64 seqs)))
+    base))
+
+
+;; Main Function
+
 (defun send-email (&rest rest
                    &key
                      to
@@ -132,6 +169,9 @@ The JSON looks like:
                      content
                      reply-to
                      (content-type "text/plain")
+		     (attachments nil)
+		     file
+		     filename
                      (api-key (uiop:getenv *api-key-environment-variable-name*))
                    &allow-other-keys) ; &allow-other-keys can help gradual API updates.
   "Send an email with SendGrid's API. https://docs.sendgrid.com/api-reference/mail-send/mail-send#body Currently only supporting basic parameters for 80% use cases.

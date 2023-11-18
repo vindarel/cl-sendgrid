@@ -3,7 +3,9 @@
   :author "vindarel"
   :license "MIT"
   :depends-on (:dexador
-               :jonathan)
+               :jonathan
+	       :qbase64
+	       :flexi-streams)
   :components ((:module "src"
                 :components
                 ((:file "sendgrid"))))
