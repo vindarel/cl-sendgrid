@@ -76,6 +76,9 @@ The JSON looks like:
                         reply-to
                         subject
 			send-at
+		        (attachments nil)
+			file
+			filename
                         (content-type "text/plain") ; this duplication is a-must. &rest doesn't pass the default value of caller's keys.
                         content-value
                       &allow-other-keys)
@@ -84,10 +87,17 @@ The JSON looks like:
   `reply-to': a pair of email and name.
   `from': the sending email
   `from-name': the sending name that shows up in the inbox"
-  (assert (and to
-               from
-               subject
-               content-value))
+  (if attachments
+      (assert (and to
+		   from
+		   subject
+		   content-value
+		   file
+		   filename))
+      (assert (and to
+		   from
+		   subject
+		   content-value)))
   (unless (or (null reply-to)
               (and (stringp (cdr (assoc "email"
                                         reply-to
@@ -107,6 +117,12 @@ The JSON looks like:
 				  ("name" . ,from-name))))
                    (when reply-to
                      `(,(cons "reply_to" reply-to)))
+
+		   (when attachments
+		     `(("attachments" (("content" . ,(create-attachment-base64 file))
+				       ("type" . "text/html")
+				       ("filename" . ,filename)
+				       ("disposition" . "attachment")))))
                    `(("subject" . ,subject)
 		     ("send_at" . ,send-at)
                      ("content" (("type" . ,content-type)
