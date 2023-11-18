@@ -127,6 +127,19 @@ The JSON looks like:
 
 ;; Logic For Sending Attachments
 
+(defun file-to-seq (file)
+  "convert a file into a sequence of bytes"
+  (flexi-streams:string-to-octets
+   (alexandria:read-file-into-string file)))
+
+(defun seq-to-base64 (seqs)
+  "convert a sequence of bytes into a base64 string"
+  (qbase64:encode-bytes seqs))
+
+(defun create-attachment-base64 (file)
+  (let* ((seqs (file-to-seq file))
+	 (base (seq-to-base64 seqs)))
+    base))
 
 
 
