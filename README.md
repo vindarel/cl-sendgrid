@@ -155,9 +155,9 @@ Example:
 		      :subject "Sending emails from SendGrid is fun!"
 		      :content-type "text/html"
 		      :content "<h1>A title</h1><br/><strong>Sending emails from SendGrid is fun!</strong>"
-			  :attachments t
-			  :file "/path/to/txt/file"
-			  :filename "filename.txt")
+		      :attachments t
+		      :file "/path/to/txt/file"
+		      :filename "filename.txt")
 ```
 
 You will receive an email with the attachment `filename.txt`. The content of the file will match that of `/path/to/txt/file`.
