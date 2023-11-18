@@ -153,10 +153,10 @@ The JSON looks like:
   (qbase64:encode-bytes seqs))
 
 (defun create-attachment-base64 (file)
+  "A function that converts a file into a base64 string. Base64 is the required format for sending attachments in emails."
   (let* ((seqs (file-to-seq file))
 	 (base (seq-to-base64 seqs)))
     base))
-
 
 
 ;; Main Function
@@ -169,6 +169,9 @@ The JSON looks like:
                      content
                      reply-to
                      (content-type "text/plain")
+		     (attachments nil)
+		     file
+		     filename
                      (api-key (uiop:getenv *api-key-environment-variable-name*))
                    &allow-other-keys) ; &allow-other-keys can help gradual API updates.
   "Send an email with SendGrid's API. https://docs.sendgrid.com/api-reference/mail-send/mail-send#body Currently only supporting basic parameters for 80% use cases.
@@ -184,5 +187,5 @@ The JSON looks like:
             :content (apply #'sendgrid-json
                             (append `(:content-value ,content)
                                     rest)))) ; The compiler might warn variables defined but never used. But keeping the warnings should be better for future code modification. E.g., suppressing the warnings by (declare (ignorable ...) could result in debugging difficulties once the API changes.
-
-
+  
+ 
