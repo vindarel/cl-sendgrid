@@ -5,7 +5,7 @@
   :depends-on (:dexador
                :jonathan
 	       :qbase64
-	       :alexandria)
+	       :flexi-streams)
   :components ((:module "src"
                 :components
                 ((:file "sendgrid"))))

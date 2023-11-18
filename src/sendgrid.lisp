@@ -146,7 +146,7 @@ The JSON looks like:
 (defun file-to-seq (file)
   "convert a file into a sequence of bytes"
   (flexi-streams:string-to-octets
-   (alexandria:read-file-into-string file)))
+   (uiop:read-file-string file)))
 
 (defun seq-to-base64 (seqs)
   "convert a sequence of bytes into a base64 string"
@@ -187,5 +187,3 @@ The JSON looks like:
             :content (apply #'sendgrid-json
                             (append `(:content-value ,content)
                                     rest)))) ; The compiler might warn variables defined but never used. But keeping the warnings should be better for future code modification. E.g., suppressing the warnings by (declare (ignorable ...) could result in debugging difficulties once the API changes.
-  
- 
