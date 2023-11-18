@@ -138,6 +138,32 @@ Use the function `(now-plus-n-days n)` where `n` can be 1, 2, or 3 days in the f
 		      :content "<h1>A title</h1><br/><strong>Sending emails from SendGrid is fun!</strong>")
 ```
 
+## Sending emails with .txt attachments
+
+You can use the `:attachments` key to send attachments. Set attachments to `t` and then you can use the `:file` and `:filename` keys to provide your attachement.
+
+`:file` takes the path to the txt file you want to attach. 
+`:filename` takes a string that represents the file name of the attachment.
+
+Example: 
+
+```lisp
+(sendgrid:send-email :to "recipient@example.com"
+	              :from "noreply@example.com"
+		      :from-name "Jane Doe"
+		      :send-at (now-plus-n-days 2)
+		      :subject "Sending emails from SendGrid is fun!"
+		      :content-type "text/html"
+		      :content "<h1>A title</h1><br/><strong>Sending emails from SendGrid is fun!</strong>"
+			  :attachments t
+			  :file "/path/to/txt/file"
+			  :filename "filename.txt")
+```
+
+You will receive an email with the attachment `filename.txt`. The content of the file will match that of `/path/to/txt/file`.
+
+
+
 # See also
 
 * https://github.com/40ants/mailgun (Mailgun: just a bit more overhead to getting started, a free plan a bit less free)
