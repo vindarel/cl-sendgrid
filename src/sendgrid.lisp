@@ -124,6 +124,14 @@ The JSON looks like:
   (assert (string-equal (sendgrid-json :to '("to@mail" "to-two@mail") :from "me@mail" :subject "hello" :content-value "yo" :reply-to '(("email" . "@") ("name" . "me")))
                         "{\"personalizations\":[{\"to\":[{\"email\":\"to@mail\"}],\"to\":[{\"email\":\"to-two@mail\"}]}],\"from\":{\"email\":\"me@mail\"},\"reply_to\":{\"email\":\"@\",\"name\":\"me\"},\"subject\":\"hello\",\"content\":[{\"type\":\"text/plain\",\"value\":\"yo\"}]}")))
 
+
+;; Logic For Sending Attachments
+
+
+
+
+;; Main Function
+
 (defun send-email (&rest rest
                    &key
                      to
@@ -147,3 +155,5 @@ The JSON looks like:
             :content (apply #'sendgrid-json
                             (append `(:content-value ,content)
                                     rest)))) ; The compiler might warn variables defined but never used. But keeping the warnings should be better for future code modification. E.g., suppressing the warnings by (declare (ignorable ...) could result in debugging difficulties once the API changes.
+
+
