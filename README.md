@@ -160,6 +160,27 @@ Example:
 		      :filename "filename.txt")
 ```
 
+## Sending emails with `pdf` attachments
+
+Ensure that the `:file` is a path to your pdf file and the `:filename` ends with `.pdf`.
+
+
+Example: 
+
+```lisp
+(sendgrid:send-email :to "recipient@example.com"
+	              :from "noreply@example.com"
+		      :from-name "Jane Doe"
+		      :send-at (now-plus-n-days 2)
+		      :subject "Sending emails from SendGrid is fun!"
+		      :content-type "text/html" ;; this is the content type of the email, not the attachments.
+		      :content "<h1>A title</h1><br/><strong>Sending emails from SendGrid is fun!</strong>"
+		      :attachments t
+		      :file "/path/to/txt/pdf/file"
+		      :filename "filename.pdf")
+```
+
+
 You will receive an email with the attachment `filename.txt`. The content of the file will match that of `/path/to/txt/file`.
 
 
