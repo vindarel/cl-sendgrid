@@ -144,12 +144,11 @@ The JSON looks like:
 ;; Logic For Sending Attachments
 
 (defun file-to-seq (file)
-  "convert a file into a sequence of bytes"
-  (flexi-streams:string-to-octets
-   (uiop:read-file-string file)))
+  "Convert a file into a sequence of bytes. Works with PDF and TXT files"
+  (alexandria:read-file-into-byte-vector file))
 
 (defun seq-to-base64 (seqs)
-  "convert a sequence of bytes into a base64 string"
+  "Convert a sequence of bytes into a base64 string."
   (qbase64:encode-bytes seqs))
 
 (defun create-attachment-base64 (file)
@@ -157,7 +156,6 @@ The JSON looks like:
   (let* ((seqs (file-to-seq file))
 	 (base (seq-to-base64 seqs)))
     base))
-
 
 ;; Main Function
 
