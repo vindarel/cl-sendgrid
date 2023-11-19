@@ -181,7 +181,7 @@ Example:
 ```
 
 
-You will receive an email with the attachment `filename.txt`. The content of the file will match that of `/path/to/txt/file`.
+You will receive an email with the attachment `filename.pdf`. The content of the file will match that of `/path/to/pdf/file`.
 
 
 
