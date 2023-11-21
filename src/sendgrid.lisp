@@ -123,8 +123,9 @@ The JSON looks like:
 				       ("type" . "text/html")
 				       ("filename" . ,filename)
 				       ("disposition" . "attachment")))))
+		   (when send-at
+		     `(("send_at" . ,send-at)))
                    `(("subject" . ,subject)
-		     ("send_at" . ,send-at)
                      ("content" (("type" . ,content-type)
                                  ("value" . ,content-value)))))))
     (jonathan:to-json json-alist :from :alist)))
