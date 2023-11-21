@@ -15,7 +15,7 @@
     (format t "Aborting.~&")
     (uiop:quit 1)))
 
-(format t "Sending… ")
+(uiop:format! t "Sending… ")
 (sendgrid:send-email :api-key (getf *email-config* :|api-key|)
                      :to (getf *email-config* :|to|)
                      :from (getf *email-config* :|from|)
