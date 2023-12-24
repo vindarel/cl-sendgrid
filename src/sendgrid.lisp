@@ -3,7 +3,8 @@
   (:export #:send-email
            #:*api-key-environment-variable-name*
            #:*verbose*
-	   #:now-plus-n-days))
+	    #:now-plus-n-days
+           #:add-contact-to-list))
 (in-package :sendgrid)
 
 ;;; Send an email with SendGrid's API.
