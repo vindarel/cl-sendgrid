@@ -184,6 +184,21 @@ Example:
 You will receive an email with the attachment `filename.pdf`. The content of the file will match that of `/path/to/pdf/file`.
 
 
+## Triggering email automations with add-contact-to-list
+
+Inside sendgrid, if you navigate to Marketing --> Contacts, you can create a contact list. A contact list is a specific segment of people that did, or will do a specific action. For example, you can have a contact list for new subscribers to your product.
+
+A list can have automatic actions attached to it. For example, you can trigger an email automation based on somebody subscribing to the list (This is managed in Marketing --> Automations).
+
+With the `add-contact-to-list` function, you can add a single contact to a specifc contact list by using the list-id. 
+
+Note - you can find the list-id at the end of the contact list url. For example `https://mc.sendgrid.com/contacts/lists/ac32607e-e253-490b-a171-d84d88xxxxxx`, in this case `ac32607e-e253-490b-a171-d84d88xxxxxx` is the list id.
+
+```lisp
+(add-contact-to-list :email "vinn@kev.com"
+                     :firstname "Vinn"
+                     :list-id "ac32607e-e253-490b-a171-d84d88xxxxxx")
+```
 
 # See also
 
