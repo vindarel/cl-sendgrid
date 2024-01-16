@@ -193,42 +193,33 @@ The JSON looks like:
 ;;-- Add a contact
 ;;===================================================
 
-(defparameter *sendgrid-contact-api-url* "https://api.sendgrid.com/v3/marketing/contacts" "the api for adding contacts to marketing lists within sendgrid")
-
+(defparameter *sendgrid-contact-api-url* "https://api.sendgrid.com/v3/marketing/contacts"
+  "The API URL for adding contacts to marketing lists within Sendgrid.")
 
 (defun contact-json (&key email firstname list-id)
-  "The JSON object sent as a post request for subscribing a single contact to a marketing list."
-
+  "The JSON object sent as a POST request for subscribing a single contact to a marketing list."
   (assert (and email firstname list-id))
-
-  (let*
-      ((firstname-only
-	       (first (uiop:split-string firstname :separator " ")))
-       
-       (json (append `(("list_ids" ,list-id))
-		                 `(("contacts" (("email" . ,email)
-				                            ("first_name" . ,firstname-only))  
-				                           )))))
-       (jonathan:to-json json :from :alist)))
-
+  (let* ((firstname-only (first (str:split "." firstname) ))
+         (json (append `(("list_ids" ,list-id))
+		       `(("contacts" (("email" . ,email)
+				      ("first_name" . ,firstname-only)))))))
+    (jonathan:to-json json :from :alist)))
 
 (defun add-contact-to-list (&key
                               email
                               firstname
                               list-id
-                              (api-key
-                               (uiop:getenv *api-key-environment-variable-name*)))
-  "Add a single contact to a sendgrid list. To trigger an automation, login to sendgrid and, in the marketing -> automation section, create an automation that triggers on adding a contact to a list."
+                              (api-key (uiop:getenv *api-key-environment-variable-name*)))
+  "Add a single contact to a sendgrid list.
 
+  To trigger an automation, login to Sendgrid and, in the marketing -> automation section, create an automation that triggers on adding a contact to a list."
   (let ((json (contact-json :email email
-			                      :firstname firstname
-			                      :list-id list-id)))
-
+			    :firstname firstname
+			    :list-id list-id)))
     (dex:put *sendgrid-contact-api-url*
              :headers `(("Authorization" . ,(concatenate
-                                              'string
-                                              "Bearer "
-                                              api-key))
-			                  ("content-Type" . "application/json"))
+                                             'string
+                                             "Bearer "
+                                             api-key))
+			("content-Type" . "application/json"))
              :content json)))
-
