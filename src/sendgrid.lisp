@@ -199,7 +199,7 @@ The JSON looks like:
 (defun contact-json (&key email firstname list-id)
   "The JSON object sent as a POST request for subscribing a single contact to a marketing list."
   (assert (and email firstname list-id))
-  (let* ((firstname-only (first (str:split "." firstname) ))
+  (let* ((firstname-only (first (uiop:split-string firstname :separator ".")))
          (json (append `(("list_ids" ,list-id))
 		       `(("contacts" (("email" . ,email)
 				      ("first_name" . ,firstname-only)))))))
